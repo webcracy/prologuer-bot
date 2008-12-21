@@ -1,0 +1,35 @@
+jabber:
+  username: thebot@jabber.org
+  password: password
+
+wordpress_db:
+  host:     localhost
+  database: name
+  username: username
+  password: password
+  socket:   can_be_left_blank_do_not_delete
+
+wordpress_xmlrpc:
+  url: http://yourdomain.com/wordpress/xmlrpc.php
+  username: must_be_an_admin
+  password: password
+
+
+#EXAMPLE config
+
+#jabber:
+#  username: yourbot@jabber.org
+#  password: password
+
+#wordpress_db:
+#  host: localhost
+#  database: wordpress
+#  username: blog
+#  password: password
+#  socket: don't remove this line, you can leave it blank
+
+#wordpress_xmlrpc:
+#  url: http://blog.com/wordpress/xmlrpc.php
+#  username: admin_user
+#  password: password
+

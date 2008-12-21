@@ -1,0 +1,134 @@
+--------------------------------------------------------------------------------
+-	Prologuer Bot
+- VERSION: 1.0
+-	DATE: 20/12/2008
+-	AUTHOR: Alexandre Loureiro Solleiro <alex@webcracy.org>
+-	WEBSITE: http://webcracy.org/projects/prologuer-bot
+-	LICENSE: MIT license (cf. LICENSE part of this file)
+
+Copyright (c) 2008 Alexandre Loureiro Solleiro <alexandre.solleiro@webcracy.org>
+
+--------------------------------------------------------------------------------
+
+= ABOUT
+
+The Prologuer Bot is a companion bot to Prologue-themed WordPress blogs. 
+It's designed to be a Jabber interface to publish messages to, and retrieve messages from, your Prologue install.
+
+Its philosophy is to explore new ways of avoiding the email Inbox and other noisy interfaces. By allowing you to post and retrieve tagged messages, it empowers you to confortably pull, through an IM interface, pertinent information that you want at the moment, and nothing else:
+
+      - say "post Leaving the office for #supplier meeting" to the bot and it'll post the message to you WP blog and tag it with "supplier";
+
+      - say "q #supplier @joe" to the bot and it'll answer with the latest messages tagged with "supplier" posted by Joe;
+
+      - say "last 4" to the bot and it'll return the last 4 messages posted to the blog;
+      
+      - say "help" and the bot will tell you everything you can do;
+
+Please read the KNOWN ISSUES part of this file and the code before you proceed.
+
+= INSTALL, CONFIG, LAUNCH
+
+== INSTALL
+
+This code requires you to have "read" access to your WordPress' MySQL database. 
+It won't work on Wordpress.com blogs, for example.
+
+These are the required gems:
+
+* sudo gem install daemons (more info: http://raa.ruby-lang.org/project/daemons/)
+* sudo gem install jabber-bot (more info: http://socket7.net/software/jabber-bot)
+
+In Wordpress 2.5 and above, double-check that XML-RPC is active on your blog.
+Here's a guide for Wordpress 2.7: http://www.wpnotifier.com/enable_xmlrpc.php
+
+== CONFIG
+
+Enter appropriate configuration for the bot in the "lib/config.yml" file. 
+
+The "wordpress_xmlrpc username" MUST have Administrator status on the WP blog: this username + password combo will be used to post all messages, while attributing authorship to the correct user (the one that asked the bot to post the message).
+
+Note that the "socket" entry on the "config.yml" file may be left empty, but must not be erased from the config file.
+
+== LAUNCH
+
+To launch, run:
+ruby prologuer.rb start (runs in background, creates a .pid file in the /lib directory)
+or
+ruby prologuer.rb run (runs in the foreground)
+
+Note: run 'ruby prologuer.rb start|run config_name' to run any lib/config_name.yml file. Useful for dev/test environnements.
+
+= USAGE
+
+== Before you run the bot 
+
+Before you run the bot, edit your WP's profile and enter you Jabber account.
+
+SAFETY WARNING: When run, the bot will talk and respond to *all* your blog's users that have specified a jabber account (even simple subscribers, this is not secure. You must either close subscriptions on the blog or tweak the code in lib/wp.rb.
+
+== Using the bot
+
+A set of screenshots is available on Flickr: 
+http://www.flickr.com/photos/alexandresolleiro/sets/72157604045887579/
+
+=== "post" command
+
+Say "post Whatever your message is and with whatever #tags you want to #tag it with" and the bot will publish your message on your WP blog under your name.
+
+WARNING about the #private tag:
+If you tag your message with #private, the message will not be published: it'll be saved as a draft. This allows you to quickly take private notes.
+However, the bot will never return #private messages. This is a shortcoming and will be fixed.
+Feel free to safely post #private messages, although you'll only be able to consult them in WP's admin console (through the "Manage" tab).
+
+=== "q" command
+
+Say "q @someone #tag1 #tag2" to the bot and it'll return you the last 5 messages published by "@someone" (where someone is a WP username) with the tags "tag1" and "tag2".
+
+=== "last" command
+
+Say "last 5" and the bot will return the last 5 messages posted on the blog. You can use any number.
+
+=== "rand" command
+
+Say "rand" to the bot and it'll return you a random number. I've kept this only to test the bot for responsiveness.
+
+
+= KNOWN ISSUES AND IMPORTANT NOTES
+
+The bot's at a very early development process, so it's incomplete feature-wise.
+
+Other than that:
+
+1 - Problems with messages received from GTalk accounts and/or Adium: the underlying jabber gems (either xmpp4r or xmpp4r-simple) seem to be ignoring certain incoming messages. It is advised to use a Jabber account to run the bot; if you're having trouble using your GTalk account, I recommend trying with a free jabber.org account
+
+2 - Many people have reported 100% CPU loads when using the jabber-bot gem. I have had no such trouble on Mac OS X 10.4 nor on Ubuntu 6.06 LTS using jabber-bot version 1.1.1. As this bot's development continues, it'll grow free from the jabber-bot gem as it will require its own "framework".
+
+3 - The bot talks to every user of your blog who has configured a Jabber account, except subscribers.
+
+4 - Every time you launch the bot it'll send a message to said users. This may be frustrating for them and you should take this in consideration. You'll need to tweak the prologuer bot's code or jabber-bot's code to change this.
+
+5 - Special characters don't work. They'll either cause the bot to crash silently or will be returned as a chinese character in the message, eating a couple of neighbouring characters in the process.
+
+
+= LICENSE
+
+Copyright (c) 2008 Alexandre Loureiro Solleiro <alexandre.solleiro@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
